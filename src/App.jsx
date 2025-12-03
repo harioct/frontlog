@@ -4,7 +4,7 @@ import emailjs from '@emailjs/browser';
 import { Gamepad2, Loader2, LogOut, Send, Mail, User, Star, StarHalf, MessageSquare, Eye, Camera, Plus, Edit3, Heart, Trophy, Activity, Flame, Search, TrendingUp, Calendar, RefreshCcw, ShieldCheck, Trash2, Pencil, X, CheckCircle, AlertTriangle, AlertCircle, Sparkles, Clock, ArrowRight, Newspaper, Medal } from 'lucide-react';
 
 // ==========================================
-// 1. CONFIGURATION (SUDAH SESUAI PUNYA KAMU)
+// 1. CONFIGURATION (SUDAH BENAR)
 // ==========================================
 const supabaseUrl = 'https://trawoiknxpbwlbfpmcqj.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRyYXdvaWtueHBid2xiZnBtY3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2OTA4MzksImV4cCI6MjA4MDI2NjgzOX0.zL_x2AtuEVGuvQtRRtckU9Egt3DD6e474SyQdZDboIQ';
@@ -128,9 +128,8 @@ function LoginPage({ addToast }) {
     const { error } = await supabase.auth.signInWithOtp({
       email: email,
       options: { 
-        // --- PERBAIKAN UTAMA DI SINI ---
-        // Kita kunci redirect-nya ke folder project kamu di GitHub Pages
-        emailRedirectTo: 'https://harioct.github.io/frontlog/'
+        // --- SUDAH DIPERBAIKI KE LINK FRONTLOG ---
+        emailRedirectTo: 'https://harioct.github.io/frontlog/' 
       },
     });
     if (error) addToast("Login Failed", error.message, "error"); else { setSent(true); addToast("Magic Link Sent", "Check your email.", "success"); }
@@ -485,7 +484,6 @@ function Dashboard({ session, addToast }) {
             <div className="grid grid-cols-3 gap-2">{wishlist.map(game => (
                <div key={game.id} className="relative group cursor-pointer" onClick={() => openNewReview(game)}>
                   <img src={game.image} className="w-full aspect-[2/3] object-cover rounded border border-transparent group-hover:border-emerald-500 transition" alt=""/>
-                  {/* TOMBOL HAPUS WISHLIST DI SINI */}
                   <button onClick={(e) => { e.stopPropagation(); toggleWishlist(game); }} className="absolute top-1 right-1 bg-black/60 hover:bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity" title="Remove from Wishlist"><X size={12}/></button>
                </div>
             ))}</div>
