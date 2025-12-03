@@ -4,7 +4,7 @@ import emailjs from '@emailjs/browser';
 import { Gamepad2, Loader2, LogOut, Send, Mail, User, Star, StarHalf, MessageSquare, Eye, Camera, Plus, Edit3, Heart, Trophy, Activity, Flame, Search, TrendingUp, Calendar, RefreshCcw, ShieldCheck, Trash2, Pencil, X, CheckCircle, AlertTriangle, AlertCircle, Sparkles, Clock, ArrowRight, Newspaper, Medal } from 'lucide-react';
 
 // ==========================================
-// 1. CONFIGURATION (SUDAH DIISI SESUAI DATA ANDA)
+// 1. CONFIGURATION (SUDAH SESUAI PUNYA KAMU)
 // ==========================================
 const supabaseUrl = 'https://trawoiknxpbwlbfpmcqj.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRyYXdvaWtueHBid2xiZnBtY3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2OTA4MzksImV4cCI6MjA4MDI2NjgzOX0.zL_x2AtuEVGuvQtRRtckU9Egt3DD6e474SyQdZDboIQ';
@@ -102,7 +102,7 @@ const NEWS_DATA = [
 ];
 
 // ==========================================
-// 2. LOGIN PAGE
+// 2. LOGIN PAGE (FIXED REDIRECT URL)
 // ==========================================
 function LoginPage({ addToast }) {
   const [email, setEmail] = useState("");
@@ -125,7 +125,14 @@ function LoginPage({ addToast }) {
     e.preventDefault();
     if (captchaInput.toUpperCase() !== captchaCode) { addToast("Access Denied", "Incorrect Captcha.", "error"); generateCaptcha(); return; }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({ email: email });
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email,
+      options: { 
+        // --- PERBAIKAN UTAMA DI SINI ---
+        // Kita kunci redirect-nya ke folder project kamu di GitHub Pages
+        emailRedirectTo: 'https://harioct.github.io/tugas-mki-frontlog/' 
+      },
+    });
     if (error) addToast("Login Failed", error.message, "error"); else { setSent(true); addToast("Magic Link Sent", "Check your email.", "success"); }
     setLoading(false);
   };
@@ -144,7 +151,11 @@ function LoginPage({ addToast }) {
   return (
     <div className="min-h-screen bg-[#14181c] flex items-center justify-center px-4 relative overflow-hidden font-sans">
        <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2070" alt="Background" className="w-full h-full object-cover object-center opacity-10" />
+          <img 
+            src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2070" 
+            alt="Background" 
+            className="w-full h-full object-cover object-center opacity-10" 
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-[#14181c]/10 to-[#14181c]/80"></div>
        </div>
 
@@ -195,7 +206,7 @@ function Dashboard({ session, addToast }) {
   const [reviewText, setReviewText] = useState("");
   
   const [isEditBioOpen, setIsEditBioOpen] = useState(false);
-  const [isEditNameOpen, setIsEditNameOpen] = useState(false); // RENAME MODAL
+  const [isEditNameOpen, setIsEditNameOpen] = useState(false);
   const [tempBio, setTempBio] = useState(bio);
   const [deleteTargetId, setDeleteTargetId] = useState(null);
   
@@ -474,6 +485,7 @@ function Dashboard({ session, addToast }) {
             <div className="grid grid-cols-3 gap-2">{wishlist.map(game => (
                <div key={game.id} className="relative group cursor-pointer" onClick={() => openNewReview(game)}>
                   <img src={game.image} className="w-full aspect-[2/3] object-cover rounded border border-transparent group-hover:border-emerald-500 transition" alt=""/>
+                  {/* TOMBOL HAPUS WISHLIST DI SINI */}
                   <button onClick={(e) => { e.stopPropagation(); toggleWishlist(game); }} className="absolute top-1 right-1 bg-black/60 hover:bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity" title="Remove from Wishlist"><X size={12}/></button>
                </div>
             ))}</div>
@@ -495,8 +507,15 @@ function Dashboard({ session, addToast }) {
         <div className="flex items-center gap-4">
            <div className="relative group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 group-focus-within:text-emerald-500" />
-              <input type="text" placeholder="Search games..." className="bg-[#0f1115] border border-gray-700 text-white text-sm rounded-full pl-10 pr-4 py-2 focus:border-emerald-500 focus:outline-none w-32 focus:w-64 transition-all duration-300" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input
+                 type="text"
+                 placeholder="Search games..."
+                 className="bg-[#0f1115] border border-gray-700 text-white text-sm rounded-full pl-10 pr-4 py-2 focus:border-emerald-500 focus:outline-none w-32 focus:w-64 transition-all duration-300"
+                 value={searchQuery}
+                 onChange={(e) => setSearchQuery(e.target.value)}
+              />
            </div>
+           
            <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold cursor-pointer overflow-hidden border-2 border-transparent hover:border-emerald-500 transition" onClick={() => setActiveTab('profile')}>
               {avatar ? <img src={avatar} className="w-full h-full object-cover" alt="User"/> : (username||"U")[0].toUpperCase()}
            </div>
