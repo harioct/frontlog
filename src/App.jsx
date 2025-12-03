@@ -125,7 +125,7 @@ function LoginPage({ addToast }) {
     e.preventDefault();
     if (captchaInput.toUpperCase() !== captchaCode) { addToast("Access Denied", "Incorrect Captcha.", "error"); generateCaptcha(); return; }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({ email: email, options: { emailRedirectTo: 'https://harioct.github.io/frontlog/' } });
+    const { error } = await supabase.auth.signInWithOtp({ email: email });
     if (error) addToast("Login Failed", error.message, "error"); else { setSent(true); addToast("Magic Link Sent", "Check your email.", "success"); }
     setLoading(false);
   };
