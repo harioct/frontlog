@@ -4,7 +4,7 @@ import emailjs from '@emailjs/browser';
 import { Gamepad2, Loader2, LogOut, Send, Mail, User, Star, StarHalf, MessageSquare, Eye, Camera, Plus, Edit3, Heart, Trophy, Activity, Flame, Search, TrendingUp, Calendar, RefreshCcw, ShieldCheck, Trash2, Pencil, X, CheckCircle, AlertTriangle, AlertCircle, Sparkles, Clock, ArrowRight, Newspaper, Medal } from 'lucide-react';
 
 // ==========================================
-// 1. CONFIGURATION (JANGAN DIUBAH)
+// 1. CONFIGURATION
 // ==========================================
 const supabaseUrl = 'https://trawoiknxpbwlbfpmcqj.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRyYXdvaWtueHBid2xiZnBtY3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2OTA4MzksImV4cCI6MjA4MDI2NjgzOX0.zL_x2AtuEVGuvQtRRtckU9Egt3DD6e474SyQdZDboIQ';
@@ -15,7 +15,7 @@ const EMAILJS_PUBLIC_KEY = 'wm7dSNwy4wH7rvib3';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// --- HELPER COMPONENTS ---
+// --- HELPER COMPONENTS (Toast, Confirm, Rating) ---
 const ToastContainer = ({ toasts, removeToast }) => (
   <div className="fixed top-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none">
     {toasts.map((toast) => (
@@ -67,7 +67,7 @@ const StarRatingInput = ({ value, onChange }) => {
   );
 };
 
-// --- DATABASE ---
+// --- DATABASE (SAMA SEPERTI SEBELUMNYA) ---
 const GAMES_DB = [
   { id: 101, title: "Baldur's Gate 3", year: "2023", category: "trending", image: "https://m.exophase.com/steam/games/o/50edge.png?a0ee9cf765b1df5cb91fbbdd6b54b77b", rating: 4.9 },
   { id: 102, title: "Metaphor Re:Fantazio", year: "2023", category: "trending", image: "https://gameranx.com/wp-content/uploads/2024/04/Metaphor-ReFantazio-1-2048x2048.jpg", rating: 4.0 },
@@ -102,7 +102,7 @@ const NEWS_DATA = [
 ];
 
 // ==========================================
-// 2. LOGIN PAGE (MAGIC LINK FIX)
+// 2. LOGIN PAGE (MAGIC LINK)
 // ==========================================
 function LoginPage({ addToast }) {
   const [email, setEmail] = useState("");
@@ -126,8 +126,8 @@ function LoginPage({ addToast }) {
     if (captchaInput.toUpperCase() !== captchaCode) { addToast("Access Denied", "Incorrect Captcha.", "error"); generateCaptcha(); return; }
     setLoading(true);
     
-    // --- PERBAIKAN KRUSIAL DISINI ---
-    // Jangan gunakan window.location.origin, tapi HARDCODE link project kamu
+    // --- MAGIC LINK BIASA ---
+    // Pastikan Redirect URL ini SAMA PERSIS dengan yang di Dashboard Supabase
     const { error } = await supabase.auth.signInWithOtp({
       email: email,
       options: { 
@@ -153,11 +153,7 @@ function LoginPage({ addToast }) {
   return (
     <div className="min-h-screen bg-[#14181c] flex items-center justify-center px-4 relative overflow-hidden font-sans">
        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2070" 
-            alt="Background" 
-            className="w-full h-full object-cover object-center opacity-10" 
-          />
+          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2070" alt="Background" className="w-full h-full object-cover object-center opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#14181c]/10 to-[#14181c]/80"></div>
        </div>
 
@@ -184,12 +180,10 @@ function LoginPage({ addToast }) {
 }
 
 // ==========================================
-// 3. DASHBOARD
+// 3. DASHBOARD (SAMA SEPERTI SEBELUMNYA)
 // ==========================================
 function Dashboard({ session, addToast }) {
   const [activeTab, setActiveTab] = useState('home'); 
-  
-  // INIT STATE FROM METADATA
   const meta = session.user.user_metadata || {};
   const [username, setUsername] = useState(meta.username || "");
   const [bio, setBio] = useState(meta.bio || "Just a gamer.");
@@ -198,22 +192,17 @@ function Dashboard({ session, addToast }) {
   const [favorites, setFavorites] = useState(meta.favorites || [null, null, null, null]);
   const [userLog, setUserLog] = useState(meta.userLog || {}); 
   const [wishlist, setWishlist] = useState(meta.wishlist || []);
-  
-  // MODALS STATE
   const [isSetupOpen, setIsSetupOpen] = useState(!meta.username);
   const [selectedGame, setSelectedGame] = useState(null); 
   const [pickerMode, setPickerMode] = useState(null); 
   const [tempName, setTempName] = useState("");
   const [inputRating, setInputRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
-  
   const [isEditBioOpen, setIsEditBioOpen] = useState(false);
   const [isEditNameOpen, setIsEditNameOpen] = useState(false);
   const [tempBio, setTempBio] = useState(bio);
   const [deleteTargetId, setDeleteTargetId] = useState(null);
-  
   const [searchQuery, setSearchQuery] = useState("");
-
   const fileInputRef = useRef(null);
   const coverInputRef = useRef(null);
   const hasSentRef = useRef(false);
