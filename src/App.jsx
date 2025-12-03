@@ -130,7 +130,7 @@ function LoginPage({ addToast }) {
       options: { 
         // --- PERBAIKAN UTAMA DI SINI ---
         // Kita kunci redirect-nya ke folder project kamu di GitHub Pages
-        emailRedirectTo: 'https://harioct.github.io/tugas-mki-frontlog/' 
+        emailRedirectTo: 'https://harioct.github.io/frontlog/'
       },
     });
     if (error) addToast("Login Failed", error.message, "error"); else { setSent(true); addToast("Magic Link Sent", "Check your email.", "success"); }
