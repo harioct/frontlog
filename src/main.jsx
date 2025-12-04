@@ -4,7 +4,5 @@ import App from './App.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // HAPUS <React.StrictMode> DI SINI
   <App />
-  // HAPUS </React.StrictMode> DI SINI
 )

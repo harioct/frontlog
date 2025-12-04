@@ -67,7 +67,7 @@ const StarRatingInput = ({ value, onChange }) => {
   );
 };
 
-// --- DATABASE (SAMA SEPERTI SEBELUMNYA) ---
+// --- DATABASE ---
 const GAMES_DB = [
   { id: 101, title: "Baldur's Gate 3", year: "2023", category: "trending", image: "https://m.exophase.com/steam/games/o/50edge.png?a0ee9cf765b1df5cb91fbbdd6b54b77b", rating: 4.9 },
   { id: 102, title: "Metaphor Re:Fantazio", year: "2023", category: "trending", image: "https://gameranx.com/wp-content/uploads/2024/04/Metaphor-ReFantazio-1-2048x2048.jpg", rating: 4.0 },
@@ -102,7 +102,7 @@ const NEWS_DATA = [
 ];
 
 // ==========================================
-// 2. LOGIN PAGE (MAGIC LINK)
+// 2. LOGIN PAGE
 // ==========================================
 function LoginPage({ addToast }) {
   const [email, setEmail] = useState("");
@@ -126,8 +126,7 @@ function LoginPage({ addToast }) {
     if (captchaInput.toUpperCase() !== captchaCode) { addToast("Access Denied", "Incorrect Captcha.", "error"); generateCaptcha(); return; }
     setLoading(true);
     
-    // --- MAGIC LINK BIASA ---
-    // Pastikan Redirect URL ini SAMA PERSIS dengan yang di Dashboard Supabase
+    // --- MAGIC LINK ---
     const { error } = await supabase.auth.signInWithOtp({
       email: email,
       options: { 
@@ -180,7 +179,7 @@ function LoginPage({ addToast }) {
 }
 
 // ==========================================
-// 3. DASHBOARD (SAMA SEPERTI SEBELUMNYA)
+// 3. DASHBOARD PAGE
 // ==========================================
 function Dashboard({ session, addToast }) {
   const [activeTab, setActiveTab] = useState('home'); 
@@ -476,7 +475,6 @@ function Dashboard({ session, addToast }) {
             <div className="grid grid-cols-3 gap-2">{wishlist.map(game => (
                <div key={game.id} className="relative group cursor-pointer" onClick={() => openNewReview(game)}>
                   <img src={game.image} className="w-full aspect-[2/3] object-cover rounded border border-transparent group-hover:border-emerald-500 transition" alt=""/>
-                  {/* TOMBOL HAPUS WISHLIST DI SINI */}
                   <button onClick={(e) => { e.stopPropagation(); toggleWishlist(game); }} className="absolute top-1 right-1 bg-black/60 hover:bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity" title="Remove from Wishlist"><X size={12}/></button>
                </div>
             ))}</div>
